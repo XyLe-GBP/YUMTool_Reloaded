@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ArchiveTypeMM" xml:space="preserve">
+    <value>ミッシングムーン アーカイブ</value>
+  </data>
+  <data name="ArchiveTypeMM_Directory" xml:space="preserve">
+    <value>ミッシングムーン アーカイブディレクトリ</value>
+  </data>
+  <data name="ArchiveTypePS" xml:space="preserve">
+    <value>パーフェクトサン アーカイブ</value>
+  </data>
+  <data name="ArchiveTypePS_Directory" xml:space="preserve">
+    <value>パーフェクトサン アーカイブディレクトリ</value>
+  </data>
+  <data name="ArchiveTypeWS" xml:space="preserve">
+    <value>ワンダリングスター アーカイブ</value>
+  </data>
+  <data name="ArchiveTypeWS_Directory" xml:space="preserve">
+    <value>ワンダリングスター アーカイブディレクトリ</value>
+  </data>
+  <data name="ColumnsName" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="ColumnsSize" xml:space="preserve">
+    <value>サイズ</value>
+  </data>
+  <data name="ColumnsType" xml:space="preserve">
+    <value>種類</value>
+  </data>
+  <data name="ConfirmTitle" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="CurrentVersion" xml:space="preserve">
+    <value>現在使用中のバージョン：{0}
+</value>
+  </data>
+  <data name="DecompressProgress" xml:space="preserve">
+    <value>展開中...
+</value>
+  </data>
+  <data name="ErrorArchive" xml:space="preserve">
+    <value>ファイル：{0} の読み込みに失敗しました。
+このファイルはアイドルマスターSPのアーカイブファイルではありません。
+</value>
+  </data>
+  <data name="ErrorArchiveFolder" xml:space="preserve">
+    <value>ディレクトリ：{0} の読み込みに失敗しました。
+このディレクトリはアイドルマスターSPのアーカイブディレクトリではありません。
+</value>
+  </data>
+  <data name="ErrorArchiveNotGenuine" xml:space="preserve">
+    <value>ファイル：{0} の読み込みに失敗しました。
+このファイルはアイドルマスターSPの純正アーカイブファイルではありません。
+</value>
+  </data>
+  <data name="ErrorDecompressed" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+{0} の展開に失敗しました。</value>
+  </data>
+  <data name="ErrorIndex" xml:space="preserve">
+    <value>ディレクトリ：{0} の読み込みに失敗しました。
+このディレクトリと同じ場所に {1}.index ファイルが見つかりませんでした。
+</value>
+  </data>
+  <data name="ErrorOffsetLength" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+オフセット値が指定されていません。</value>
+  </data>
+  <data name="ErrorPerlNotFound" xml:space="preserve">
+    <value>Perlがインストールされていないため、アプリケーションを続行できません。
+ActivePerl もしくは Strawberry Perl をインストールしてください。</value>
+  </data>
+  <data name="ErrorRecompressed" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+{0} の再構築に失敗しました。</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="FbdArchiveOpenTitle" xml:space="preserve">
+    <value>アーカイブディレクトリを指定</value>
+  </data>
+  <data name="FbdArchiveSaveTitle" xml:space="preserve">
+    <value>保存先のディレクトリを指定</value>
+  </data>
+  <data name="FileSizeText" xml:space="preserve">
+    <value>{0} バイト</value>
+  </data>
+  <data name="FilterArchive" xml:space="preserve">
+    <value>アイドルマスターSP アーカイブ (YUMFILE_*.BIN)|YUMFILE_1.BIN;YUMFILE_2.BIN;YUMFILE_3.BIN</value>
+  </data>
+  <data name="FilterMM" xml:space="preserve">
+    <value>アイドルマスターSP ミッシングムーン アーカイブ (YUMFILE_3.BIN)|YUMFILE_3.BIN</value>
+  </data>
+  <data name="FilterPS" xml:space="preserve">
+    <value>アイドルマスターSP パーフェクトサン アーカイブ (YUMFILE_1.BIN)|YUMFILE_1.BIN</value>
+  </data>
+  <data name="FilterWS" xml:space="preserve">
+    <value>アイドルマスターSP ワンダリングスター アーカイブ (YUMFILE_2.BIN)|YUMFILE_2.BIN</value>
+  </data>
+  <data name="FolderBrowserDialogArchive" xml:space="preserve">
+    <value>アイドルマスターSP アーカイブディレクトリを指定</value>
+  </data>
+  <data name="FoundActivePerl" xml:space="preserve">
+    <value>ActivePerlが見つかりました：{0}
+</value>
+  </data>
+  <data name="FoundStrawberryPerl" xml:space="preserve">
+    <value>StrawberryPerlが見つかりました：{0}
+</value>
+  </data>
+  <data name="Latested" xml:space="preserve">
+    <value>アプリケーションのバージョンは最新です。</value>
+  </data>
+  <data name="LatestVersion" xml:space="preserve">
+    <value>最新バージョン：{0}
+</value>
+  </data>
+  <data name="MoveText" xml:space="preserve">
+    <value>{0} 移動中...</value>
+  </data>
+  <data name="OpenFileDialogArchive" xml:space="preserve">
+    <value>アイドルマスターSP アーカイブを開く</value>
+  </data>
+  <data name="ProgressDecompressed" xml:space="preserve">
+    <value>{0} を展開中：{1} / {2} ファイル</value>
+  </data>
+  <data name="ProgressInitialize" xml:space="preserve">
+    <value>プロセスを開始しています…</value>
+  </data>
+  <data name="ProgressRecompressed" xml:space="preserve">
+    <value>{0} を再構築中：{1} / {2} バイト</value>
+  </data>
+  <data name="ReadedArchive" xml:space="preserve">
+    <value>アーカイブ読み込み完了：{0}
+サイズ：{1}
+種類：{2}
+</value>
+  </data>
+  <data name="ReadedArchiveFolder" xml:space="preserve">
+    <value>アーカイブディレクトリの読み込み完了：{0}
+サイズ：{1}
+ファイル数：{2}
+種類：{3}
+</value>
+  </data>
+  <data name="RecompressProgress" xml:space="preserve">
+    <value>再構築中...
+</value>
+  </data>
+  <data name="RunningApp" xml:space="preserve">
+    <value>アプリケーションが開始されました。
+</value>
+  </data>
+  <data name="SaveFileDialogArchive" xml:space="preserve">
+    <value>アイドルマスターSP アーカイブを保存</value>
+  </data>
+  <data name="StatusReady" xml:space="preserve">
+    <value>準備完了</value>
+  </data>
+  <data name="SuccessDecompressed" xml:space="preserve">
+    <value>全ての展開プロセスが完了しました。
+展開したファイル数：{0} ファイル</value>
+  </data>
+  <data name="SuccessProgress" xml:space="preserve">
+    <value>完了
+</value>
+  </data>
+  <data name="SuccessRecompressed" xml:space="preserve">
+    <value>全ての再構築プロセスが完了しました。
+再構築後のアーカイブサイズ：{0} バイト</value>
+  </data>
+  <data name="SuccessTitle" xml:space="preserve">
+    <value>完了！</value>
+  </data>
+  <data name="UnexpectedArchiveFileSize" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+ファイル：{0} は純正アーカイブファイルではありません。</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+</value>
+  </data>
+  <data name="UnexpectedFileCountMismatch" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+ディレクトリのファイル数が一致しません。</value>
+  </data>
+  <data name="UnexpectedIndexCorrupted" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+ファイル：{0}
+このindexファイルはパス情報が破損しています。</value>
+  </data>
+  <data name="UnexpectedIndexNotFound" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+{0}.index が見つかりませんでした。</value>
+  </data>
+  <data name="UnexpectedIndexNotFoundPath" xml:space="preserve">
+    <value>エラーが発生しました。
+パス：{0}
+Indexファイルに記述されたパスのディレクトリが見つかりませんでした。</value>
+  </data>
+  <data name="UnexpectedNotArchive" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+このファイルはアーカイブファイルではありません。</value>
+  </data>
+  <data name="UnexpectedNotArchiveDirectory" xml:space="preserve">
+    <value>予期せぬエラーが発生しました。
+このディレクトリはアーカイブディレクトリではありません。</value>
+  </data>
+  <data name="UpdateConfirm" xml:space="preserve">
+    <value>アプリケーションの更新が可能です。
+サイトを開きますか？</value>
+  </data>
+  <data name="VerifyCount" xml:space="preserve">
+    <value>検証完了
+ファイル数：{0}
+</value>
+  </data>
+  <data name="VerifySize" xml:space="preserve">
+    <value>検証完了
+サイズ：{0}
+</value>
+  </data>
+  <data name="WarningExist" xml:space="preserve">
+    <value>指定されたディレクトリ内には既に他のファイルが存在します。
+このまま続行した場合、指定したディレクトリ内のファイルは全て失われます。
+続行しますか？</value>
+  </data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>警告</value>
+  </data>
+</root>
