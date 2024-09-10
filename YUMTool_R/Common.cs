@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -76,6 +77,13 @@ namespace YUMTool_R
         /// </summary>
         public static bool perlflag = false, workerflag = false, doworkerflag = false, decompress_ok = false, recomp_check_1 = false, recomp_check_2 = false, recompress_ok = false;
 
+        public static int ProcessFlag = 0, ProgressMax = 0;
+        public static CancellationTokenSource cts = null!;
+        public static bool Result = false, IsCancelled = false;
+        public static StreamReader pLog;
+        public static string GlobalExceptions = null;
+        public static nint LogboxHandle = 0; 
+
         /// <summary>
         /// YUMFILE_*のフラグ変数
         /// 
@@ -85,6 +93,8 @@ namespace YUMTool_R
         /// 2:ミッシングムーン
         /// </summary>
         public static int yumflag = -1;
+
+        public static bool IsNocompress = false;
 
         /// <summary>
         /// 読み込み先パスを格納しておく一時的な静的変数
@@ -107,6 +117,16 @@ namespace YUMTool_R
     /// </summary>
     class Utils
     {
+        const int WM_GETTEXTLENGTH = 0x000E;
+        const int EM_SETSEL = 0x00B1;
+        const int EM_REPLACESEL = 0x00C2;
+
+        [DllImport("User32.dll", CharSet = CharSet.Unicode)]
+        public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, string lParam);
+
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, int lParam);
+
         /// <summary>
         /// Process.Start: Open URI for .NET Core
         /// </summary>
@@ -158,6 +178,44 @@ namespace YUMTool_R
             }
         }
 
+        public static List<String> GetAllFiles(String DirPath)
+        {
+            List<String> lstStr = new List<String>();    // 取得したファイル名を格納するためのリスト
+            String[] strBuff;   // ファイル名とディレクトリ名取得用
+
+            try
+            {
+                // ファイル名取得
+                strBuff = Directory.GetFiles(DirPath, "*");        // 探索範囲がルートフォルダで時間が掛かるため、テキスト形式のファイルのみ探索
+                foreach (String file in strBuff)
+                {
+                    lstStr.Add(file);
+                }
+
+                // ディレクトリ名の取得
+                strBuff = Directory.GetDirectories(DirPath);
+                foreach (String directory in strBuff)
+                {
+                    List<String> lstBuff = GetAllFiles(directory);    // 取得したディレクトリ名を引数にして再帰
+                    lstBuff.ForEach(delegate (String str)
+                    {
+                        lstStr.Add(str);
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                // 主に発生する例外は、システムフォルダ等で発生するアクセス拒否
+                //        例外名：System.UnauthorizedAccessException
+                _ = SendMessage(Common.LogboxHandle, EM_REPLACESEL, 1, "[" + DateTime.Now.ToString() + "]->" + e + Environment.NewLine);
+                Debug.WriteLine(e);
+            }
+
+            // 取得したファイル名リストを呼び出し元に返す
+            return lstStr;
+
+        }
+
         /// <summary>
         /// 指定したディレクトリのひとつ前のディレクトリパスを取得
         /// </summary>
@@ -206,7 +264,14 @@ namespace YUMTool_R
             foreach (string filePath in filePaths)
             {
                 File.SetAttributes(filePath, FileAttributes.Normal);
-                File.Delete(filePath);
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (IOException)
+                {
+
+                }
             }
 
             string[] directoryPaths = Directory.GetDirectories(targetDirectoryPath);
@@ -215,7 +280,27 @@ namespace YUMTool_R
                 DeleteAll(directoryPath);
             }
 
-            Directory.Delete(targetDirectoryPath, false);
+            Directory.Delete(targetDirectoryPath, true);
+        }
+
+        /// <summary>
+        /// 指定したディレクトリ内のファイルのみを削除する
+        /// </summary>
+        /// <param name="targetDirectoryPath">削除するディレクトリのパス</param>
+        public static void DeleteDirectoryFiles(string targetDirectoryPath)
+        {
+            if (!Directory.Exists(targetDirectoryPath))
+            {
+                return;
+            }
+
+            DirectoryInfo di = new(targetDirectoryPath);
+            FileInfo[] fi = di.GetFiles();
+            foreach (var file in fi)
+            {
+                file.Delete();
+            }
+            return;
         }
 
         public static void TemporaryFileCheckExists()
@@ -303,6 +388,36 @@ namespace YUMTool_R
             var md5 = System.Security.Cryptography.MD5.Create();
             var md5Hash = md5.ComputeHash(fs);
             return BitConverter.ToString(md5Hash);
+        }
+
+        public static (string, bool, bool) CheckPerl()
+        {
+            ProcessStartInfo psInfo = new ProcessStartInfo();
+
+            psInfo.FileName = Environment.GetEnvironmentVariable("ComSpec");
+            psInfo.Arguments = "/c powershell get-command perl";
+            psInfo.CreateNoWindow = true;
+            psInfo.UseShellExecute = false;
+            psInfo.RedirectStandardOutput = true;
+
+            Process p = Process.Start(psInfo);
+            string output = p.StandardOutput.ReadToEnd();
+            int startindex = output.LastIndexOf(":\\") - 1, length = output.LastIndexOf("perl.exe") + 10 - output.LastIndexOf(":\\") - 1;
+            output = output.Substring(startindex, length);
+            Debug.WriteLine(output);
+
+            if (output.Contains("devkitpro", StringComparison.OrdinalIgnoreCase) || output.Contains("git", StringComparison.OrdinalIgnoreCase) || output.Contains("msys", StringComparison.OrdinalIgnoreCase))
+            {
+                return (output, false, true);
+            }
+            else if (output.Contains("strawberry", StringComparison.OrdinalIgnoreCase) || output.Contains("perl64", StringComparison.OrdinalIgnoreCase))
+            {
+                return (output, true, false);
+            }
+            else
+            {
+                return (output, false, false);
+            }
         }
     }
 }

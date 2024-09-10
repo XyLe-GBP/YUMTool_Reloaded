@@ -112,11 +112,16 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AbortConfirm" xml:space="preserve">
+    <value>Processing is in progress. If you interrupt processing, the current progress will be lost.
+
+Do you want to interrupt processing?</value>
+  </data>
   <data name="ArchiveTypeMM" xml:space="preserve">
     <value>Missing Moon Archive</value>
   </data>
@@ -135,6 +140,10 @@
   <data name="ArchiveTypeWS_Directory" xml:space="preserve">
     <value>Wanderling Star Archive Directory</value>
   </data>
+  <data name="Cancelled" xml:space="preserve">
+    <value>The process was canceled by the user.
+</value>
+  </data>
   <data name="ColumnsName" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -150,6 +159,9 @@
   <data name="CurrentVersion" xml:space="preserve">
     <value>Current version: {0}
 </value>
+  </data>
+  <data name="DecompressInfo" xml:space="preserve">
+    <value>{0} is being deployed. Please wait a moment...</value>
   </data>
   <data name="DecompressProgress" xml:space="preserve">
     <value>Decompressing...
@@ -260,6 +272,9 @@ Size: {1}
 File count: {2}
 Type: {3}
 </value>
+  </data>
+  <data name="RecompressInfo" xml:space="preserve">
+    <value>{0} is being rebuilt. Please wait a moment...</value>
   </data>
   <data name="RecompressProgress" xml:space="preserve">
     <value>Recompressing...

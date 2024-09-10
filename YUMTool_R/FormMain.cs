@@ -1,4 +1,5 @@
-﻿using PrivateProfile;
+﻿using Microsoft.VisualBasic.Logging;
+using PrivateProfile;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static YUMTool_R.Common;
@@ -42,36 +44,36 @@ namespace YUMTool_R
                 Text = "YUMTool Rel ( build: " + ver.FileVersion.ToString() + "-Beta )";
             }
 
+            LogboxHandle = textBox1.Handle;
             TemporaryFileCheckExists();
+            var data = CheckPerl();
 
-            if (File.Exists(@"C:\\Perl64\\bin\\perl.exe"))
+            if (data.Item2 && !data.Item3)
             {
-                perlflag = true;
-                WriteLog(string.Format(Localize.FoundActivePerl, "C:\\Perl64\\bin\\perl.exe"));
-            }
-            else if (File.Exists(@"C:\\Strawberry\\perl\\bin\\perl.exe"))
-            {
-                perlflag = true;
-                WriteLog(string.Format(Localize.FoundStrawberryPerl, "C:\\Strawberry\\perl\\bin\\perl.exe"));
-            }
-            else
-            {
-                perlflag = false;
-            }
-
-            if (perlflag != true)
-            {
-                MessageBox.Show(this, Localize.ErrorPerlNotFound, Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-            }
-            else
-            {
+                if (data.Item1.Contains("strawberry"))
+                {
+                    WriteLog(string.Format(Localize.FoundStrawberryPerl, data.Item1));
+                }
+                else
+                {
+                    WriteLog(string.Format(Localize.FoundActivePerl, data.Item1));
+                }
                 listView1.View = View.Details;
                 listView1.Columns.Add(Localize.ColumnsName, 100);
                 listView1.Columns.Add(Localize.ColumnsSize, 125);
                 listView1.Columns.Add(Localize.ColumnsType, 200);
 
                 WriteLog(Localize.RunningApp);
+            }
+            else if (!data.Item2 && data.Item3)
+            {
+                MessageBox.Show(this, "Cannot start application because of a conflict in perl.\r\n" + data.Item1 + "\r\nPlease remove the conflicting perl.exe.", Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+            }
+            else
+            {
+                MessageBox.Show(this, Localize.ErrorPerlNotFound, Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
             }
         }
 
@@ -124,6 +126,7 @@ namespace YUMTool_R
                                 current_yum = "YUMFILE_1.BIN";
                                 current_filepath = ofd.FileName;
                                 WriteLog(string.Format(Localize.ReadedArchive, ofd.FileName, filesizestr, Localize.ArchiveTypePS));
+                                toolStripMenuItem6.Enabled = true;
                                 break;
                             }
                         case "YUMFILE_2":
@@ -147,6 +150,7 @@ namespace YUMTool_R
                                 current_yum = "YUMFILE_2.BIN";
                                 current_filepath = ofd.FileName;
                                 WriteLog(string.Format(Localize.ReadedArchive, ofd.FileName, filesizestr, Localize.ArchiveTypeWS));
+                                toolStripMenuItem6.Enabled = true;
                                 break;
                             }
                         case "YUMFILE_3":
@@ -170,6 +174,7 @@ namespace YUMTool_R
                                 current_yum = "YUMFILE_3.BIN";
                                 current_filepath = ofd.FileName;
                                 WriteLog(string.Format(Localize.ReadedArchive, ofd.FileName, filesizestr, Localize.ArchiveTypeMM));
+                                toolStripMenuItem6.Enabled = true;
                                 break;
                             }
                         default:
@@ -260,6 +265,7 @@ namespace YUMTool_R
                                 current_yum = "YUMFILE_1";
                                 current_filepath = fbd.SelectedPath;
                                 WriteLog(string.Format(Localize.ReadedArchiveFolder, fbd.SelectedPath, string.Format(Localize.FileSizeText, directorysize), yum1_progress_max - 2, Localize.ArchiveTypePS_Directory));
+                                toolStripMenuItem6.Enabled = true;
                                 break;
                             }
                         }
@@ -296,6 +302,7 @@ namespace YUMTool_R
                                 current_yum = "YUMFILE_2";
                                 current_filepath = fbd.SelectedPath;
                                 WriteLog(string.Format(Localize.ReadedArchiveFolder, fbd.SelectedPath, string.Format(Localize.FileSizeText, directorysize), yum2_progress_max - 2, Localize.ArchiveTypeWS_Directory));
+                                toolStripMenuItem6.Enabled = true;
                                 break;
                             }
                         }
@@ -332,6 +339,7 @@ namespace YUMTool_R
                                 current_yum = "YUMFILE_3";
                                 current_filepath = fbd.SelectedPath;
                                 WriteLog(string.Format(Localize.ReadedArchiveFolder, fbd.SelectedPath, string.Format(Localize.FileSizeText, directorysize), yum3_progress_max - 2, Localize.ArchiveTypeMM_Directory));
+                                toolStripMenuItem6.Enabled = true;
                                 break;
                             }
                         }
@@ -372,9 +380,16 @@ namespace YUMTool_R
         private void ToolStripMenuItem6_Click(object sender, EventArgs e)
         {
             listView1.Items.Clear();
+            pictureBox2.Image = Properties.Resources.logo_not;
+            pictureBox2.Refresh();
             button1.Enabled = false;
             button2.Enabled = false;
+            yumflag = -1;
+            current_yum = null;
             current_filepath = null;
+            toolStripMenuItem6.Enabled = false;
+            textBox1.Clear();
+            WriteLog("File is closed." + Environment.NewLine);
             return;
         }
 
@@ -475,12 +490,12 @@ namespace YUMTool_R
         /// <param name="e"></param>
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (current_filepath == null)
+            if (string.IsNullOrWhiteSpace(current_filepath))
             {
                 return;
             }
 
-            if (current_yum == null)
+            if (string.IsNullOrWhiteSpace(current_yum))
             {
                 return;
             }
@@ -495,6 +510,12 @@ namespace YUMTool_R
             if (fbd.ShowDialog(this) == DialogResult.OK)
             {
                 current_savepath = fbd.SelectedPath;
+                FileInfo cfp = new(current_filepath);
+                if (current_savepath == cfp.DirectoryName)
+                {
+                    MessageBox.Show(this, string.Format("The same location as {0} cannot be specified as the destination.", current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 if (Directory.GetFiles(fbd.SelectedPath, "*", SearchOption.AllDirectories).Length != 0)
                 {
                     DialogResult dr = MessageBox.Show(this, Localize.WarningExist, Localize.WarningTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -508,13 +529,13 @@ namespace YUMTool_R
                     else
                     {
                         return;
-                    }           
+                    }
                 }
 
                 WriteLog(Localize.DecompressProgress);
                 Enabled = false;
-                toolStripProgressBar1.Enabled = true;
-                toolStripStatusLabel1.Enabled = true;
+                //toolStripProgressBar1.Enabled = true;
+                //toolStripStatusLabel1.Enabled = true;
 
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\tmp");
 
@@ -527,16 +548,27 @@ namespace YUMTool_R
                 File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\tmp\\utils.plx", plfile1);
                 File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\tmp\\string.plx", plfile2);
 
-                File.Copy(current_filepath, fbd.SelectedPath + "\\" + current_yum);
-                File.Move(Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe", Directory.GetCurrentDirectory() + "\\lzss.exe");
+                if (!File.Exists(fbd.SelectedPath + "\\" + current_yum))
+                {
+                    File.Copy(current_filepath, fbd.SelectedPath + "\\" + current_yum);
+                }
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\lzss.exe"))
+                {
+                    File.Move(Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe", Directory.GetCurrentDirectory() + "\\lzss.exe");
+                }
+
                 while (!File.Exists(fbd.SelectedPath + "\\" + current_yum))
                 {
-                    toolStripStatusLabel1.Text = string.Format(Localize.MoveText, current_yum);
+                    //toolStripStatusLabel1.Text = string.Format(Localize.MoveText, current_yum);
                 }
-                Decompressed_RefleshProgress();
-                backgroundWorker1.RunWorkerAsync();
+                //Decompressed_RefleshProgress();
+                //backgroundWorker1.RunWorkerAsync();
 
-                while (backgroundWorker1.IsBusy)
+                SetProcess(0);
+                using FormProgress form2 = new();
+                form2.ShowDialog();
+
+                /*while (backgroundWorker1.IsBusy)
                 {
                     Application.DoEvents();
                     if (workerflag == true)
@@ -548,13 +580,9 @@ namespace YUMTool_R
                         continue;
                     }
                 }
-                workerflag = false;
+                workerflag = false;*/
 
-                if (decompress_ok != true)
-                {
-                    MessageBox.Show(this, string.Format(Localize.ErrorDecompressed, current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
+                if (Result)
                 {
                     MessageBox.Show(this, string.Format(Localize.SuccessDecompressed, Directory.GetFiles(current_savepath, "*", SearchOption.AllDirectories).Length), Localize.SuccessTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     switch (yumflag)
@@ -573,6 +601,27 @@ namespace YUMTool_R
                     }
                     WriteLog(Localize.SuccessProgress);
                 }
+                else
+                {
+                    if (IsCancelled)
+                    {
+                        //Thread.Sleep(2000);
+
+                        FormDelete form = new();
+                        form.ShowDialog();
+                        form.Dispose();
+
+                        Directory.CreateDirectory(current_savepath);
+
+                        ResetALL();
+                        Enabled = true;
+                        WriteLog(Localize.Cancelled);
+                        return;
+                    }
+
+                    MessageBox.Show(this, string.Format(Localize.ErrorDecompressed, current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
                 File.Move(Directory.GetCurrentDirectory() + "\\lzss.exe", Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe");
                 File.Delete(fbd.SelectedPath + "\\" + current_yum);
                 ResetALL();
@@ -629,36 +678,42 @@ namespace YUMTool_R
                 File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\tmp\\utils.plx", plfile1);
                 File.WriteAllBytes(Directory.GetCurrentDirectory() + "\\tmp\\string.plx", plfile2);
 
-                File.Move(Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe", Directory.GetCurrentDirectory() + "\\lzss.exe");
+                if (!File.Exists(Directory.GetCurrentDirectory() + "\\lzss.exe"))
+                {
+                    File.Move(Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe", Directory.GetCurrentDirectory() + "\\lzss.exe");
+                }
 
-                Recompressed_RefleshProgress();
-                backgroundWorker2.RunWorkerAsync();
 
-                while (backgroundWorker2.IsBusy)
+                //Recompressed_RefleshProgress();
+                //backgroundWorker2.RunWorkerAsync();
+
+                SetProcess(1);
+                using FormProgress form2 = new();
+                form2.ShowDialog();
+
+                /*while (backgroundWorker2.IsBusy)
                 {
                     Application.DoEvents();
                 }
                 backgroundWorker2.Dispose();
-                workerflag = false;
-                if (!File.Exists(GetLastDirectory(current_filepath) + "\\" + current_yum + ".bin"))
-                {
-                    MessageBox.Show(this, string.Format(Localize.ErrorRecompressed, current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    File.Move(Directory.GetCurrentDirectory() + "\\lzss.exe", Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe");
-                    ResetALL();
-                    return;
-                }
-                else
-                {
-                    File.Move(GetLastDirectory(current_filepath) + "\\" + current_yum + ".bin", current_savepath);
-                }
+                workerflag = false;*/
 
-                FileInfo file = new(current_savepath);
-                if (recompress_ok != true)
+                if (Result)
                 {
-                    MessageBox.Show(this, string.Format(Localize.ErrorRecompressed, current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else
-                {
+                    if (!File.Exists(GetLastDirectory(current_filepath) + "\\" + current_yum + ".bin"))
+                    {
+                        MessageBox.Show(this, string.Format(Localize.ErrorRecompressed, current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        File.Move(Directory.GetCurrentDirectory() + "\\lzss.exe", Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe");
+                        ResetALL();
+                        return;
+                    }
+                    else
+                    {
+                        File.Move(GetLastDirectory(current_filepath) + "\\" + current_yum + ".bin", current_savepath);
+                    }
+
+                    FileInfo file = new(current_savepath);
+
                     MessageBox.Show(this, string.Format(Localize.SuccessRecompressed, file.Length), Localize.SuccessTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
                     switch (yumflag)
                     {
@@ -676,6 +731,22 @@ namespace YUMTool_R
                     }
                     WriteLog(Localize.SuccessProgress);
                 }
+                else
+                {
+                    if (IsCancelled)
+                    {
+                        Thread.Sleep(2000);
+
+                        File.Delete(current_savepath);
+                        ResetALL();
+                        Enabled = true;
+                        WriteLog(Localize.Cancelled);
+                        return;
+                    }
+
+                    MessageBox.Show(this, string.Format(Localize.ErrorRecompressed, current_yum), Localize.ErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
                 File.Move(Directory.GetCurrentDirectory() + "\\lzss.exe", Directory.GetCurrentDirectory() + "\\tmp\\lzss.exe");
                 ResetALL();
                 Enabled = true;
@@ -761,7 +832,7 @@ namespace YUMTool_R
 
         private void BackgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
+            /*toolStripProgressBar1.Value = e.ProgressPercentage;
             switch (yumflag)
             {
                 case 0:
@@ -775,7 +846,7 @@ namespace YUMTool_R
                     break;
                 default:
                     break;
-            }
+            }*/
         }
 
         /// <summary>
@@ -845,7 +916,7 @@ namespace YUMTool_R
 
         private void Decompressed_RefleshProgress()
         {
-            if (current_savepath != null)
+            /*if (current_savepath != null)
             {
                 toolStripProgressBar1.Minimum = 0;
                 switch (yumflag)
@@ -864,7 +935,7 @@ namespace YUMTool_R
                 }
                 toolStripProgressBar1.Value = 0;
                 toolStripStatusLabel1.Text = Localize.ProgressInitialize;
-            }
+            }*/
         }
 
         /// <summary>
@@ -950,7 +1021,7 @@ namespace YUMTool_R
 
         private void BackgroundWorker2_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            toolStripProgressBar1.Value = e.ProgressPercentage;
+            /*toolStripProgressBar1.Value = e.ProgressPercentage;
             switch (yumflag)
             {
                 case 0:
@@ -964,7 +1035,7 @@ namespace YUMTool_R
                     break;
                 default:
                     break;
-            }
+            }*/
         }
 
         /// <summary>
@@ -1250,7 +1321,7 @@ namespace YUMTool_R
 
         private void Recompressed_RefleshProgress()
         {
-            var ini = new IniFile(@".\\settings.ini");
+            /*var ini = new IniFile(@".\\settings.ini");
             int check1, check2;
 
             check1 = ini.GetInt("SETTINGS", "0x1000", 0xFFFF);
@@ -1355,7 +1426,7 @@ namespace YUMTool_R
                 }
                 toolStripProgressBar1.Value = 0;
                 toolStripStatusLabel1.Text = Localize.ProgressInitialize;
-            }
+            }*/
         }
 
         public void ResetALL()
@@ -1370,9 +1441,12 @@ namespace YUMTool_R
             current_filepath = null;
             current_savepath = null;
             current_yum = null;
+            cts = null;
+            IsCancelled = false;
             yumflag = -1;
-            toolStripProgressBar1.Value = 0;
-            toolStripStatusLabel1.Text = Localize.StatusReady;
+            //toolStripProgressBar1.Value = 0;
+            //toolStripStatusLabel1.Text = Localize.StatusReady;
+            toolStripMenuItem6.Enabled = false;
             DeleteAll(Directory.GetCurrentDirectory() + "\\tmp");
         }
 
@@ -1387,6 +1461,81 @@ namespace YUMTool_R
             textBox1.Clear();
         }
 
-        
+        private void SetProcess(int number)
+        {
+            ProcessFlag = number;
+            switch (ProcessFlag)
+            {
+                case 0:
+                    switch (yumflag)
+                    {
+                        case 0:
+                            ProgressMax = (int)yum1_progress_max;
+                            break;
+                        case 1:
+                            ProgressMax = (int)yum2_progress_max;
+                            break;
+                        case 2:
+                            ProgressMax = (int)yum3_progress_max;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case 1:
+                    var ini = new IniFile(@".\\settings.ini");
+                    int check1, check2;
+                    string tbox;
+
+                    check1 = ini.GetInt("SETTINGS", "0x1000", 0xFFFF);
+                    check2 = ini.GetInt("SETTINGS", "0x1001", 0xFFFF);
+                    tbox = ini.GetString("SETTINGS", "0x0000", null);
+
+                    if (check1 == 0 || check2 == 1)
+                    {
+                        switch (yumflag)
+                        {
+                            case 0:
+                                ProgressMax = (int)yum1_repack_nc_size;
+                                break;
+                            case 1:
+                                ProgressMax = (int)yum2_repack_nc_size;
+                                break;
+                            case 2:
+                                ProgressMax = (int)yum3_repack_nc_size;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (yumflag)
+                        {
+                            case 0:
+                                ProgressMax = (int)yum1_repack_size;
+                                break;
+                            case 1:
+                                ProgressMax = (int)yum2_repack_size;
+                                break;
+                            case 2:
+                                ProgressMax = (int)yum3_repack_size;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

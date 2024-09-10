@@ -19,7 +19,7 @@ namespace YUMTool_R {
     // または Visual Studio のようなツールを使用して自動生成されました。
     // メンバーを追加または削除するには、.ResX ファイルを編集して、/str オプションと共に
     // ResGen を実行し直すか、または VS プロジェクトをビルドし直します。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Localize {
@@ -57,6 +57,17 @@ namespace YUMTool_R {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Processing is in progress. If you interrupt processing, the current progress will be lost.
+        ///
+        ///Do you want to interrupt processing? に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AbortConfirm {
+            get {
+                return ResourceManager.GetString("AbortConfirm", resourceCulture);
             }
         }
         
@@ -115,6 +126,16 @@ namespace YUMTool_R {
         }
         
         /// <summary>
+        ///   The process was canceled by the user.
+        /// に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Cancelled {
+            get {
+                return ResourceManager.GetString("Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Name に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ColumnsName {
@@ -157,6 +178,15 @@ namespace YUMTool_R {
         internal static string CurrentVersion {
             get {
                 return ResourceManager.GetString("CurrentVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   {0} is being deployed. Please wait a moment... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string DecompressInfo {
+            get {
+                return ResourceManager.GetString("DecompressInfo", resourceCulture);
             }
         }
         
@@ -441,6 +471,15 @@ namespace YUMTool_R {
         internal static string ReadedArchiveFolder {
             get {
                 return ResourceManager.GetString("ReadedArchiveFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   {0} is being rebuilt. Please wait a moment... に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string RecompressInfo {
+            get {
+                return ResourceManager.GetString("RecompressInfo", resourceCulture);
             }
         }
         
